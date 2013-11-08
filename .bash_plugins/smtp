@@ -1,0 +1,2 @@
+# alias for blackhole smtp server on port 26
+alias smtp_hole='sudo python -m smtpd -n -c DebuggingServer localhost:26'

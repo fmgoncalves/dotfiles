@@ -1,0 +1,14 @@
+## Android stuff
+
+# method to retrieve/set internal android id
+#	retrieve if it has no arguments
+#	set if id argument is provided
+function android_id {
+if [ $# -gt 0 ]
+then
+    /usr/bin/adb shell sqlite3 /data/data/com.android.providers.settings/databases/settings.db "UPDATE secure SET value='$1' WHERE name='android_id'"
+else
+    /usr/bin/adb shell sqlite3 /data/data/com.android.providers.settings/databases/settings.db "SELECT value FROM secure WHERE name='android_id'"
+fi
+}
+

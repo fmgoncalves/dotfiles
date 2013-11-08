@@ -1,0 +1,37 @@
+##################################################################################
+####	Version Control Helpers												######
+##################################################################################
+
+
+# Get modified files in svn work dir
+alias svn-status='svn status |grep -v "^$"|grep -v "^?"|grep -v "^X"|grep -v "^Performing status on external item at"'
+
+# Short alias gor githelper
+alias gh=githelper.py
+
+# Shortcut for stassh-and-update git svn pattern
+#alias git-dc='git stash && git svn rebase && git svn dcommit && git stash pop'
+
+# All in one (svn, git svn, githelper) workspace updater
+#alias 7up='( git stash && ( gh svn-rebase || git svn rebase ) && git stash pop ) || svn up'
+alias 7up='( gh-do rebase || ( git stash && git svn rebase && git stash pop ) ) || svn up'
+
+
+# Persistent githelper commiter
+function gh-do {
+	ROOT_DIR=`pwd`
+	
+	cd `git rev-parse --show-toplevel`
+	for d in $(gh tree | awk '{print $3}' | sed 's/>$//')
+	do
+		echo "Checking $d"
+		cd $d
+		git stash
+		git svn $1
+		git stash pop
+	done
+	wait
+	
+	cd $ROOT_DIR
+}
+
